@@ -118,8 +118,8 @@ Now we can install and configure the TURN server on the turn host.
 After the script has run through, we can configure the TURN server. In 
 `/etc/turnserver.conf` change:
 
--`tls-listening-port=443` to `tls-listening-port=8443`
--`external-ip=10.23.42.3` to `external-ip=195.191.197.195` (i.e. your external IP!)
+-Set `tls-listening-port=443` to `tls-listening-port=8443`
+-Set `external-ip=10.23.42.3` to `external-ip=195.191.197.195` (i.e. your external IP!)
 
 Afterwards, restart the TURN server with `service coturn restart`.
 
