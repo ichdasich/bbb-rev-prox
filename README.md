@@ -130,7 +130,7 @@ between the local and remote IP address, we have to patch it.
 
 ## Patching bbb-install.sh
 Download the script with:  
-`wget https://ubuntu.bigbluebutton.org/bbb-install.sh`
+`bbb # wget https://ubuntu.bigbluebutton.org/bbb-install.sh`
   
 Then change lines 433 and 518 as follows:  
 ```
@@ -146,7 +146,7 @@ Then change lines 433 and 518 as follows:
 
 ## Running bbb-install.sh
 Next, we can run the patched bbb-install.sh as usual:  
-`cat bbb-install.sh | bash -s -- -v xenial-22 -s bbb.nat.home.aperture-labs.org -e your@mail.com -g -c turn.nat.home.aperture-labs.org:use-another-secret`
+`bbb # cat bbb-install.sh | bash -s -- -v xenial-22 -s bbb.nat.home.aperture-labs.org -e your@mail.com -g -c turn.nat.home.aperture-labs.org:use-another-secret`
 
 ## Setting up syncing of https certificates
 
@@ -155,7 +155,7 @@ refreshed) on bbb.nat.home.aperture-labs.org. Hence, we have to sync them over
 to the web host, so they are also auto-generated there. Please figure out your
 own method there.  For the test-setup, I opted for generating an ssh-key for
 root on web.nat.home.aperture-labs.org and adding the pub-key on
-bbb.nat.home.aperture-labs.org. I then setup the following cron-job ob
+bbb.nat.home.aperture-labs.org. I then setup the following cron-job on
 web.nat.home.aperture-labs.org:  
 
 `23 1   *   *   *     rsync -av root@10.23.42.5:/etc/letsencrypt /etc && service nginx reload`
@@ -167,7 +167,7 @@ Note, that this might bring conflicts, if you are already using LE on web.nat.ho
 Next, change `/usr/share/bbb-web/WEB-INF/classes/spring/turn-stun-servers.xml`
 to reflect the different TURN server port we are using:  
 
-`sed -i s/443/8443/ /usr/share/bbb-web/WEB-INF/classes/spring/turn-stun-servers.xml`  
+`bbb # sed -i s/443/8443/ /usr/share/bbb-web/WEB-INF/classes/spring/turn-stun-servers.xml`  
 
 Apply this change with `bbb-conf --restart`; Depending on your setup, you might
 want to add this change to the apply-config.sh script (see the BBB
