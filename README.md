@@ -6,7 +6,9 @@ other content is already running.
 
 ## Hosts and network configuration
 
-This how-to uses five hosts:
+This how-to uses five hosts, all located in the RFC1918 range of 10.23.42.0/24, 
+with one of them acting as a router with an additional public IPv4 address 
+(from the RFC5737 documentation range in this document).
 
 - nat.example.com [10.23.42.1 / 198.51.100.42] (Router/Default GW, OpenBSD 6.7)
 - client1.nat.example.com [10.23.42.2] (Random client inside the network, Ubuntu 18.04)
