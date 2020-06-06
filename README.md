@@ -292,5 +292,6 @@ server directly at https://bbb.nat.example.com/.
 # 6. TODO
 
 Currently, this needs a dedicated port-forward for TURN. I will do some more
-digging to see if TURN can be reverse proxied as well (maybe with the WebSocket
-Proxy options; Will update the documentation accordingly then.
+digging to see if TURN can be reverse proxied as well (maybe with
+http://nginx.org/en/docs/stream/ngx_stream_ssl_preread_module.html#ssl_preread).
+Will update the documentation in case there is actual need for that.
