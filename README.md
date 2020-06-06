@@ -8,17 +8,17 @@ other content is already running.
 
 This how-to uses five hosts:
 
-- nat.home.aperture-labs.org [10.23.42.1 / 195.191.197.195] (Router/Default GW, OpenBSD 6.7)
-- client1.nat.home.aperture-labs.org [10.23.42.2] (Random client inside the network, Ubuntu 18.04)
-- turn.nat.home.aperture-labs.org [10.23.42.3] (TURN server for BBB, Ubuntu 18.04)
-- web.nat.home.aperture-labs.org [10.23.42.4] (Webserver and reverse proxy, Ubuntu 18.04)
-- bbb.nat.home.aperture-labs.org [10.23.42.5] (BBB Server, Ubuntu 16.04)
+- nat.example.com [10.23.42.1 / 195.191.197.195] (Router/Default GW, OpenBSD 6.7)
+- client1.nat.example.com [10.23.42.2] (Random client inside the network, Ubuntu 18.04)
+- turn.nat.example.com [10.23.42.3] (TURN server for BBB, Ubuntu 18.04)
+- web.nat.example.com [10.23.42.4] (Webserver and reverse proxy, Ubuntu 18.04)
+- bbb.nat.example.com [10.23.42.5] (BBB Server, Ubuntu 16.04)
 
 ## DNS Configuration
-There are two DNS records configured in the zone nat.home.aperture-labs.org
+There are two DNS records configured in the zone nat.example.com
 
-`nat.home.aperture-labs.org IN A 195.191.197.195`  
-`*.nat.home.aperture-labs.org IN A 195.191.197.195`
+`nat.example.com IN A 195.191.197.195`  
+`*.nat.example.com IN A 195.191.197.195`
 
 ## NAT/Routing configuration
 
@@ -62,15 +62,15 @@ connections when possible (and auto-configure to the right settings).
 Furthermore, esp. on the web-host, it is necessary so that the proxy statements
 via https work without certificate errors.
 
-### web.nat.home.aperture-labs.org
-`10.23.42.3 turn.nat.home.aperture-labs.org`  
-`10.23.42.5 bbb.nat.home.aperture-labs.org`
+### web.nat.example.com
+`10.23.42.3 turn.nat.example.com`  
+`10.23.42.5 bbb.nat.example.com`
 
-### turn.nat.home.aperture-labs.org
-`10.23.42.3 turn.nat.home.aperture-labs.org`
+### turn.nat.example.com
+`10.23.42.3 turn.nat.example.com`
 
-### bbb.nat.home.aperture-labs.org
-`10.23.42.5      bbb.nat.home.aperture-labs.org`
+### bbb.nat.example.com
+`10.23.42.5      bbb.nat.example.com`
 
 ## 2. Setup HTTP/80 Reverse Proxies
 
@@ -85,11 +85,11 @@ server
    listen 80;  
    listen       [::]:80;  
   
-   server_name turn.nat.home.aperture-labs.org;  
+   server_name turn.nat.example.com;  
   
    root /var/www/html;  
    location / {  
-      proxy_pass http://turn.nat.home.aperture-labs.org;  
+      proxy_pass http://turn.nat.example.com;  
    }  
 }  
   
@@ -100,11 +100,11 @@ server
    listen 80;  
    listen [::]:80;  
   
-   server_name bbb.nat.home.aperture-labs.org;  
+   server_name bbb.nat.example.com;  
   
    root /var/www/html;  
    location / {  
-      proxy_pass http://bbb.nat.home.aperture-labs.org;  
+      proxy_pass http://bbb.nat.example.com;  
    }  
 }  
 ```
@@ -112,7 +112,7 @@ server
 # 3. Install TURN server
 Now we can install and configure the TURN server on the turn host. 
   
-`turn # wget -qO- https://ubuntu.bigbluebutton.org/bbb-install.sh | bash -s -- -c turn.nat.home.aperture-labs.org:use-another-secret -e admin@example.com`
+`turn # wget -qO- https://ubuntu.bigbluebutton.org/bbb-install.sh | bash -s -- -c turn.nat.example.com:use-another-secret -e admin@example.com`
 
 ## Configure TURN to use port 8443
 After the script has run through, we can configure the TURN server. In 
@@ -146,21 +146,21 @@ Then change lines 433 and 518 as follows:
 
 ## Running bbb-install.sh
 Next, we can run the patched bbb-install.sh as usual:  
-`bbb # cat bbb-install.sh | bash -s -- -v xenial-22 -s bbb.nat.home.aperture-labs.org -e admin@example.com -g -c turn.nat.home.aperture-labs.org:use-another-secret`
+`bbb # cat bbb-install.sh | bash -s -- -v xenial-22 -s bbb.nat.example.com -e admin@example.com -g -c turn.nat.example.com:use-another-secret`
 
 ## Setting up syncing of https certificates
 
 With this setup, the SSL certificates are generated (and automatically
-refreshed) on bbb.nat.home.aperture-labs.org. Hence, we have to sync them over
+refreshed) on bbb.nat.example.com. Hence, we have to sync them over
 to the web host, so they are also auto-generated there. Please figure out your
 own method there.  For the test-setup, I opted for generating an ssh-key for
-root on web.nat.home.aperture-labs.org and adding the pub-key on
-bbb.nat.home.aperture-labs.org. I then setup the following cron-job on
-web.nat.home.aperture-labs.org:  
+root on web.nat.example.com and adding the pub-key on
+bbb.nat.example.com. I then setup the following cron-job on
+web.nat.example.com:  
 
 `23 1   *   *   *     rsync -av root@10.23.42.5:/etc/letsencrypt /etc && service nginx reload`
 
-Note, that this might bring conflicts, if you are already using LE on web.nat.home.aperture-labs.org.
+Note, that this might bring conflicts, if you are already using LE on web.nat.example.com.
 
 ## Configuring TURN server
 
@@ -176,8 +176,8 @@ documentation).
 # 5. Configuring NGINX
 
 After(!) you synced the SSL certificates, we can change the configuration on
-web.nat.home.aperture-labs.org again, to add required proxy statements for
-https/bbb. Change the vhost for bbb.nat.home.aperture-labs.org listening on
+web.nat.example.com again, to add required proxy statements for
+https/bbb. Change the vhost for bbb.nat.example.com listening on
 port 80 as follows:  
 
 ```
@@ -186,16 +186,16 @@ server
    listen 80;  
    listen [::]:80;  
     
-   server_name bbb.nat.home.aperture-labs.org;  
+   server_name bbb.nat.example.com;  
     
    root /var/www/html;  
    index index.html;  
     
    location / {  
-      proxy_pass http://bbb.nat.home.aperture-labs.org;  
+      proxy_pass http://bbb.nat.example.com;  
    }  
    location /ws {  
-      proxy_pass https://bbb.nat.home.aperture-labs.org:7443;  
+      proxy_pass https://bbb.nat.example.com:7443;  
       proxy_http_version 1.1;  
       proxy_set_header Upgrade $http_upgrade;  
       proxy_set_header Connection "Upgrade";  
@@ -205,7 +205,7 @@ server
       send_timeout 6h;  
    }  
    location /bbb-webrtc-sfu {  
-      proxy_pass https://bbb.nat.home.aperture-labs.org;  
+      proxy_pass https://bbb.nat.example.com;  
       proxy_http_version 1.1;  
       proxy_set_header Upgrade $http_upgrade;  
       proxy_set_header Connection "Upgrade";  
@@ -215,7 +215,7 @@ server
       send_timeout 6h;  
    }  
    location /pad/socket.io {  
-      proxy_pass https://bbb.nat.home.aperture-labs.org;  
+      proxy_pass https://bbb.nat.example.com;  
       proxy_set_header Host $host;  
       proxy_buffering off;  
       proxy_set_header X-Real-IP $remote_addr;  
@@ -237,16 +237,16 @@ server
 {  
    listen 443;  
    listen       [::]:443;  
-   server_name bbb.nat.home.aperture-labs.org;  
+   server_name bbb.nat.example.com;  
    root /var/www/html;  
    ssl on;  
-   ssl_certificate /etc/letsencrypt/live/bbb.nat.home.aperture-labs.org/fullchain.pem;  
-   ssl_certificate_key /etc/letsencrypt/live/bbb.nat.home.aperture-labs.org/privkey.pem;  
+   ssl_certificate /etc/letsencrypt/live/bbb.nat.example.com/fullchain.pem;  
+   ssl_certificate_key /etc/letsencrypt/live/bbb.nat.example.com/privkey.pem;  
    location / {  
-      proxy_pass https://bbb.nat.home.aperture-labs.org;  
+      proxy_pass https://bbb.nat.example.com;  
    }  
    location /ws {  
-      proxy_pass https://bbb.nat.home.aperture-labs.org:7443;  
+      proxy_pass https://bbb.nat.example.com:7443;  
       proxy_http_version 1.1;  
       proxy_set_header Upgrade $http_upgrade;  
       proxy_set_header Connection "Upgrade";  
@@ -256,7 +256,7 @@ server
       send_timeout 6h;  
    }  
    location /bbb-webrtc-sfu {  
-      proxy_pass https://bbb.nat.home.aperture-labs.org;  
+      proxy_pass https://bbb.nat.example.com;  
       proxy_http_version 1.1;  
       proxy_set_header Upgrade $http_upgrade;  
       proxy_set_header Connection "Upgrade";  
@@ -266,7 +266,7 @@ server
       send_timeout 6h;  
    }  
    location /pad/socket.io {  
-      proxy_pass https://bbb.nat.home.aperture-labs.org;  
+      proxy_pass https://bbb.nat.example.com;  
       proxy_set_header Host $host;  
       proxy_buffering off;  
       proxy_set_header X-Real-IP $remote_addr;  
@@ -282,8 +282,8 @@ server
 
 Afterwards, restart nginx with `service nginx restart`, and you are done. You
 should now be able to reach your BBB server with enabled greenlight frontend at
-https://bbb.nat.home.aperture-labs.org/b (if you installed it), and the BBB
-server directly at https://bbb.nat.home.aperture-labs.org/. 
+https://bbb.nat.example.com/b (if you installed it), and the BBB
+server directly at https://bbb.nat.example.com/. 
 
 # 6. TODO
 
