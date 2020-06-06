@@ -8,7 +8,7 @@ other content is already running.
 
 This how-to uses five hosts:
 
-- nat.example.com [10.23.42.1 / 195.191.197.195] (Router/Default GW, OpenBSD 6.7)
+- nat.example.com [10.23.42.1 / 198.51.100.42] (Router/Default GW, OpenBSD 6.7)
 - client1.nat.example.com [10.23.42.2] (Random client inside the network, Ubuntu 18.04)
 - turn.nat.example.com [10.23.42.3] (TURN server for BBB, Ubuntu 18.04)
 - web.nat.example.com [10.23.42.4] (Webserver and reverse proxy, Ubuntu 18.04)
@@ -17,8 +17,8 @@ This how-to uses five hosts:
 ## DNS Configuration
 There are two DNS records configured in the zone nat.example.com
 
-`nat.example.com IN A 195.191.197.195`  
-`*.nat.example.com IN A 195.191.197.195`
+`nat.example.com IN A 198.51.100.42`  
+`*.nat.example.com IN A 198.51.100.42`
 
 ## NAT/Routing configuration
 
@@ -28,16 +28,16 @@ settings for the network device you are using. Pull requests for
 linux/cisco/etc. routers are welcome!
 
 ```
-match out on hvn0 from 10.23.42.0/24 to any nat-to 195.191.197.195  
+match out on hvn0 from 10.23.42.0/24 to any nat-to 198.51.100.42  
 pass out on hvn0 from 10.23.42.0/24 to any  
   
 # Redirect web-traffic to the web-host  
-match in on hvn0 proto tcp from any to 195.191.197.195 port 80 rdr-to 10.23.42.4 port 80  
-match in on hvn0 proto tcp from any to 195.191.197.195 port 443 rdr-to 10.23.42.4 port 443  
+match in on hvn0 proto tcp from any to 198.51.100.42 port 80 rdr-to 10.23.42.4 port 80  
+match in on hvn0 proto tcp from any to 198.51.100.42 port 443 rdr-to 10.23.42.4 port 443  
   
 # Redirect TURN traffic on port 8443 to the turn host  
-match in on hvn0 proto tcp from any to 195.191.197.195 port 8443 rdr-to 10.23.42.3 port 8443  
-match in on hvn0 proto udp from any to 195.191.197.195 port 8443 rdr-to 10.23.42.3 port 8443  
+match in on hvn0 proto tcp from any to 198.51.100.42 port 8443 rdr-to 10.23.42.3 port 8443  
+match in on hvn0 proto udp from any to 198.51.100.42 port 8443 rdr-to 10.23.42.3 port 8443  
   
 # NAT internal hosts connecting to the external IP address of TURN/BBB, so they can also  
 # use the external address/default DNS names
@@ -46,11 +46,11 @@ match out on hvn2 from 10.23.42.0/24 to 10.23.42.3 nat-to 10.23.42.1
   
 # Redirect internal traffic to the web-host (also necessary so that bbb api connects work  
 # internally!  
-match in on hvn2 proto tcp from any to 195.191.197.195 port 80 rdr-to 10.23.42.4 port 80  
-match in on hvn2 proto tcp from any to 195.191.197.195 port 443 rdr-to 10.23.42.4 port 443  
+match in on hvn2 proto tcp from any to 198.51.100.42 port 80 rdr-to 10.23.42.4 port 80  
+match in on hvn2 proto tcp from any to 198.51.100.42 port 443 rdr-to 10.23.42.4 port 443  
   
 # Same, but for TURN  
-match in on hvn2 proto tcp from any to 195.191.197.195 port 8443 rdr-to 10.23.42.3 port 8443  
+match in on hvn2 proto tcp from any to 198.51.100.42 port 8443 rdr-to 10.23.42.3 port 8443  
 ```
 
 # Installing BBB
@@ -119,7 +119,7 @@ After the script has run through, we can configure the TURN server. In
 `/etc/turnserver.conf` change:
 
 - Set `tls-listening-port=443` to `tls-listening-port=8443`
-- Set `external-ip=10.23.42.3` to `external-ip=195.191.197.195` (i.e. your external IP!)
+- Set `external-ip=10.23.42.3` to `external-ip=198.51.100.42` (i.e. your external IP!)
 
 Afterwards, restart the TURN server with `service coturn restart`.
 
