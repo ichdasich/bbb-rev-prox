@@ -148,7 +148,9 @@ Then change lines 433 and 518 as follows:
 
 ## Running bbb-install.sh
 Next, we can run the patched bbb-install.sh as usual:  
-`bbb # cat bbb-install.sh | bash -s -- -v xenial-22 -s bbb.nat.example.com -e admin@example.com -g -c turn.nat.example.com:use-another-secret`
+`bbb # cat bbb-install.sh | bash -s -- -v xenial-22 -s bbb.nat.example.com -e admin@example.com -g -c turn.nat.example.com:use-another-secret`  
+
+Note that, if you do not want to use greenlight, you have to remove the -g from the invocation of the install script.
 
 ## Setting up syncing of https certificates
 
