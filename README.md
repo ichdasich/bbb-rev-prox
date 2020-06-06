@@ -27,7 +27,7 @@ rules set. In case you do not use an OpenBSD router, please find the equivalent
 settings for the network device you are using. Pull requests for
 linux/cisco/etc. routers are welcome!
 
-`
+```
 match out on hvn0 from 10.23.42.0/24 to any nat-to 195.191.197.195  
 pass out on hvn0 from 10.23.42.0/24 to any  
   
@@ -51,7 +51,7 @@ match in on hvn2 proto tcp from any to 195.191.197.195 port 443 rdr-to 10.23.42.
   
 ; Same, but for TURN  
 match in on hvn2 proto tcp from any to 195.191.197.195 port 8443 rdr-to 10.23.42.3 port 8443  
-`
+```
 
 # Installing BBB
 
@@ -79,7 +79,7 @@ can get LE certificates automatically while using install.sh.
 
 We add, to /etc/nginx/sites-enabled/default:
 
-`
+```
 server  
 {  
    listen 80;  
@@ -107,7 +107,7 @@ server
       proxy_pass http://bbb.nat.home.aperture-labs.org;  
    }  
 }  
-`
+```
 
 # 3. Install TURN server
 Now we can install and configure the TURN server on the turn host. 
@@ -133,7 +133,7 @@ Download the script with:
 `wget https://ubuntu.bigbluebutton.org/bbb-install.sh`
   
 Then change lines 433 and 518 as follows:  
-`
+```
 433c433  
 <     local external_ip=$(grep $1 /etc/hosts| grep -o '^[.0-9]*'| tail -n1)  
 ---  
@@ -142,7 +142,7 @@ Then change lines 433 and 518 as follows:
 <     DIG_IP=$(grep $1 /etc/hosts| grep -o '^[.0-9]*'| tail -n1)  
 ---  
 >     DIG_IP=$(dig +short $1 | grep '^[.0-9]*$' | tail -n1)  
-`
+```
 
 ## Running bbb-install.sh
 Next, we can run the patched bbb-install.sh as usual:  
@@ -180,7 +180,7 @@ web.nat.home.aperture-labs.org again, to add required proxy statements for
 https/bbb. Change the vhost for bbb.nat.home.aperture-labs.org listening on
 port 80 as follows:  
 
-`
+```
 server  
 {  
    listen 80;  
@@ -228,11 +228,11 @@ server
    }  
   
 }  
-`
+```
 
 And add the following new entry for https:  
 
-`
+```
 server  
 {  
    listen 443;  
@@ -278,7 +278,7 @@ server
       proxy_set_header Connection "Upgrade";  
    }  
 }  
-`
+```
 
 Afterwards, restart nginx with `service nginx restart`, and you are done. You
 should now be able to reach your BBB server with enabled greenlight frontend at
