@@ -112,7 +112,7 @@ server
 # 3. Install TURN server
 Now we can install and configure the TURN server on the turn host. 
   
-`turn # wget -qO- https://ubuntu.bigbluebutton.org/bbb-install.sh | bash -s -- -c turn.nat.home.aperture-labs.org:use-another-secret -e your@mail.com`
+`turn # wget -qO- https://ubuntu.bigbluebutton.org/bbb-install.sh | bash -s -- -c turn.nat.home.aperture-labs.org:use-another-secret -e admin@example.com`
 
 ## Configure TURN to use port 8443
 After the script has run through, we can configure the TURN server. In 
@@ -146,7 +146,7 @@ Then change lines 433 and 518 as follows:
 
 ## Running bbb-install.sh
 Next, we can run the patched bbb-install.sh as usual:  
-`bbb # cat bbb-install.sh | bash -s -- -v xenial-22 -s bbb.nat.home.aperture-labs.org -e your@mail.com -g -c turn.nat.home.aperture-labs.org:use-another-secret`
+`bbb # cat bbb-install.sh | bash -s -- -v xenial-22 -s bbb.nat.home.aperture-labs.org -e admin@example.com -g -c turn.nat.home.aperture-labs.org:use-another-secret`
 
 ## Setting up syncing of https certificates
 
