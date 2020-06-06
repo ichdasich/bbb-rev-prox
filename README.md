@@ -31,25 +31,25 @@ linux/cisco/etc. routers are welcome!
 match out on hvn0 from 10.23.42.0/24 to any nat-to 195.191.197.195  
 pass out on hvn0 from 10.23.42.0/24 to any  
   
-; Redirect web-traffic to the web-host  
+# Redirect web-traffic to the web-host  
 match in on hvn0 proto tcp from any to 195.191.197.195 port 80 rdr-to 10.23.42.4 port 80  
 match in on hvn0 proto tcp from any to 195.191.197.195 port 443 rdr-to 10.23.42.4 port 443  
   
-; Redirect TURN traffic on port 8443 to the turn host  
+# Redirect TURN traffic on port 8443 to the turn host  
 match in on hvn0 proto tcp from any to 195.191.197.195 port 8443 rdr-to 10.23.42.3 port 8443  
 match in on hvn0 proto udp from any to 195.191.197.195 port 8443 rdr-to 10.23.42.3 port 8443  
   
-; NAT internal hosts connecting to the external IP address of TURN/BBB, so they can also  
-; use the external address/default DNS names
+# NAT internal hosts connecting to the external IP address of TURN/BBB, so they can also  
+# use the external address/default DNS names
 match out on hvn2 from 10.23.42.0/24 to 10.23.42.4 nat-to 10.23.42.1  
 match out on hvn2 from 10.23.42.0/24 to 10.23.42.3 nat-to 10.23.42.1  
   
-; Redirect internal traffic to the web-host (also necessary so that bbb api connects work  
-; internally!  
+# Redirect internal traffic to the web-host (also necessary so that bbb api connects work  
+# internally!  
 match in on hvn2 proto tcp from any to 195.191.197.195 port 80 rdr-to 10.23.42.4 port 80  
 match in on hvn2 proto tcp from any to 195.191.197.195 port 443 rdr-to 10.23.42.4 port 443  
   
-; Same, but for TURN  
+# Same, but for TURN  
 match in on hvn2 proto tcp from any to 195.191.197.195 port 8443 rdr-to 10.23.42.3 port 8443  
 ```
 
