@@ -9,10 +9,10 @@ other content is already running.
 This how-to uses five hosts:
 
 - nat.home.aperture-labs.org [10.23.42.1 / 195.191.197.195] (Router/Default GW, OpenBSD 6.7)
-- client1.home.aperture-labs.org [10.23.42.2] (Random client inside the network, Ubuntu 18.04)
-- turn.home.aperture-labs.org [10.23.42.3] (TURN server for BBB, Ubuntu 18.04)
-- web.home.aperture-labs.org [10.23.42.4] (Webserver and reverse proxy, Ubuntu 18.04)
-- bbb.home.aperture-labs.org [10.23.42.5] (BBB Server, Ubuntu 16.04)
+- client1.nat.home.aperture-labs.org [10.23.42.2] (Random client inside the network, Ubuntu 18.04)
+- turn.nat.home.aperture-labs.org [10.23.42.3] (TURN server for BBB, Ubuntu 18.04)
+- web.nat.home.aperture-labs.org [10.23.42.4] (Webserver and reverse proxy, Ubuntu 18.04)
+- bbb.nat.home.aperture-labs.org [10.23.42.5] (BBB Server, Ubuntu 16.04)
 
 ## DNS Configuration
 There are two DNS records configured in the zone nat.home.aperture-labs.org
