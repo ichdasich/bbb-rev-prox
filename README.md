@@ -133,10 +133,17 @@ Afterwards, restart the TURN server with `service coturn restart`.
 
 # 4. Install BigBlueButton
 
-Next, we can install BBB. As the install script does not like the difference 
-between the local and remote IP address, we have to patch it. 
+Next, we can install BBB. If you already have a running instance, you can
+also ensure that it correctly works/runs on your internal IP address. The main
+objective is to make sure that bbb, e.g., in `bbb-conf --check` does only list:
+(a) The hostname (which should be the same internally and externally), and, (b)
+The internal/RFC1918 IP address.
 
 ## Patching bbb-install.sh
+
+As the install script does not like the difference between the local and remote
+IP address, we have to patch it. 
+
 Download the script with:  
 `bbb # wget https://ubuntu.bigbluebutton.org/bbb-install.sh`
   
