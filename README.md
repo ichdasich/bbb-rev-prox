@@ -42,12 +42,12 @@ match in on hvn0 proto tcp from any to 198.51.100.42 port 8443 rdr-to 10.23.42.3
 match in on hvn0 proto udp from any to 198.51.100.42 port 8443 rdr-to 10.23.42.3 port 8443  
   
 # NAT internal hosts connecting to the external IP address of TURN/BBB, so they can also  
-# use the external address/default DNS names
+# use the external address/default DNS names; See Step 1 below!
 match out on hvn2 from 10.23.42.0/24 to 10.23.42.4 nat-to 10.23.42.1  
 match out on hvn2 from 10.23.42.0/24 to 10.23.42.3 nat-to 10.23.42.1  
   
 # Redirect internal traffic to the web-host (also necessary so that bbb api connects work  
-# internally!  
+# internally! See Step 1 below!
 match in on hvn2 proto tcp from any to 198.51.100.42 port 80 rdr-to 10.23.42.4 port 80  
 match in on hvn2 proto tcp from any to 198.51.100.42 port 443 rdr-to 10.23.42.4 port 443  
   
@@ -57,12 +57,17 @@ match in on hvn2 proto tcp from any to 198.51.100.42 port 8443 rdr-to 10.23.42.3
 
 # Installing BBB
 
-## 1. Add entries to /etc/hosts
+## 1. Add entries to /etc/hosts / Setup Splitview DNS
 
 We first have to add entries to /etc/hosts, so the servers can execute direct
 connections when possible (and auto-configure to the right settings).
 Furthermore, esp. on the web-host, it is necessary so that the proxy statements
 via https work without certificate errors.
+
+In case you want to/have already a splitview DNS setup running, you can also
+add these names to the internal DNS view. In that case, you also may not have
+to set the internal host NAT rules. Furthermore, you may not have to patch
+bbb-install.sh in Step 4.
 
 ### web.nat.example.com
 `10.23.42.3 turn.nat.example.com`  
