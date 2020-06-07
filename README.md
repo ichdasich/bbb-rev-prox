@@ -37,17 +37,18 @@ pass out on hvn0 from 10.23.42.0/24 to any
 match in on hvn0 proto tcp from any to 198.51.100.42 port 80 rdr-to 10.23.42.4 port 80  
 match in on hvn0 proto tcp from any to 198.51.100.42 port 443 rdr-to 10.23.42.4 port 443  
   
-# Redirect TURN traffic on port 8443 to the turn host  
+# Redirect TURN traffic on port 8443 to the turn host; See 'configure turn server  
+# in Step 4 and adjust this accordingly  
 match in on hvn0 proto tcp from any to 198.51.100.42 port 8443 rdr-to 10.23.42.3 port 8443  
 match in on hvn0 proto udp from any to 198.51.100.42 port 8443 rdr-to 10.23.42.3 port 8443  
   
 # NAT internal hosts connecting to the external IP address of TURN/BBB, so they can also  
-# use the external address/default DNS names; See Step 1 below!
+# use the external address/default DNS names; See Step 1 below!  
 match out on hvn2 from 10.23.42.0/24 to 10.23.42.4 nat-to 10.23.42.1  
 match out on hvn2 from 10.23.42.0/24 to 10.23.42.3 nat-to 10.23.42.1  
   
 # Redirect internal traffic to the web-host (also necessary so that bbb api connects work  
-# internally! See Step 1 below!
+# internally! See Step 1 below!  
 match in on hvn2 proto tcp from any to 198.51.100.42 port 80 rdr-to 10.23.42.4 port 80  
 match in on hvn2 proto tcp from any to 198.51.100.42 port 443 rdr-to 10.23.42.4 port 443  
   
@@ -174,7 +175,8 @@ Note, that this might bring conflicts, if you are already using LE on web.nat.ex
 ## Configuring TURN server
 
 Next, change `/usr/share/bbb-web/WEB-INF/classes/spring/turn-stun-servers.xml`
-to reflect the different TURN server port we are using:  
+to reflect the different TURN server port we are using. If you do not use port  
+8443, please adjust this accordingly, also in your port-forwards:  
 
 `bbb # sed -i s/443/8443/ /usr/share/bbb-web/WEB-INF/classes/spring/turn-stun-servers.xml`  
 
